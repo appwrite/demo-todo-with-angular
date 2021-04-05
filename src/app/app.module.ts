@@ -10,6 +10,8 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { NgxsModule } from '@ngxs/store';
+import { AppState, AuthState } from './store';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { AlertComponent } from './components/alert/alert.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxsModule.forRoot([AppState])
   ],
   providers: [],
   bootstrap: [AppComponent]
