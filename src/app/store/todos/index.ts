@@ -9,33 +9,35 @@ export class TodoStateModel {
   todos: any[];
 }
 
-/** Actions */
-export class FetchTodos {
-  static readonly type = '[Todo] FetchTodos';
-}
+export namespace Todos {
+  /** Actions */
+  export class Fetch {
+    static readonly type = '[Todo] FetchTodos';
+  }
 
-export class AddTodo {
-  static readonly type = '[Todo] AddTodo';
-  constructor(
-    public payload: { data: Todo; read: string[]; write: string[] }
-  ) {}
-}
+  export class Add {
+    static readonly type = '[Todo] AddTodo';
+    constructor(
+      public payload: { data: Todo; read: string[]; write: string[] }
+    ) {}
+  }
 
-export class UpdateTodo {
-  static readonly type = '[Auth] DeleteTodo';
-  constructor(
-    public payload: {
-      documentId: string;
-      data: Todo;
-      read: string[];
-      write: string[];
-    }
-  ) {}
-}
+  export class Update {
+    static readonly type = '[Auth] DeleteTodo';
+    constructor(
+      public payload: {
+        documentId: string;
+        data: Todo;
+        read: string[];
+        write: string[];
+      }
+    ) {}
+  }
 
-export class DeleteTodo {
-  static readonly type = '[Todo] DeleteTodo';
-  constructor(public payload: { documentId: string }) {}
+  export class Delete {
+    static readonly type = '[Todo] DeleteTodo';
+    constructor(public payload: { documentId: string }) {}
+  }
 }
 
 @State<TodoStateModel>({
@@ -51,10 +53,10 @@ export class TodoState {
     return state.todos;
   }
 
-  @Action(FetchTodos)
+  @Action(Todos.Fetch)
   async fetchTodos(
     { patchState }: StateContext<TodoStateModel>,
-    action: FetchTodos
+    action: Todos.Fetch
   ) {
     try {
       let todos = (await Api.provider().database.listDocuments(
@@ -68,71 +70,74 @@ export class TodoState {
     }
   }
 
-  @Action(AddTodo)
+  @Action(Todos.Add)
   async addTodo(
     { patchState, getState }: StateContext<TodoStateModel>,
-    action: AddTodo
+    action: Todos.Add
   ) {
     try {
       let { data, read, write } = action.payload;
-      let todo = (await  Api.provider().database.createDocument(
+      let todo = await Api.provider().database.createDocument(
         Server.collectionID,
         data,
         read,
         write
-      ));
+      );
       var todos = getState().todos;
       todos.unshift(todo);
       patchState({
-          todos
-      })
+        todos,
+      });
     } catch (e) {
       console.log('Failed to add todo');
     }
   }
 
-  @Action(UpdateTodo)
+  @Action(Todos.Update)
   async updateTodo(
     { patchState, getState }: StateContext<TodoStateModel>,
-    action: UpdateTodo
+    action: Todos.Update
   ) {
     let { documentId, data, read, write } = action.payload;
     try {
-      let updatedTodo = await Api.provider().database.updateDocument(
+      let updatedTodo = (await Api.provider().database.updateDocument(
         Server.collectionID,
         documentId,
         data,
         read,
         write
-      ) as any;
+      )) as any;
       let todos = getState().todos;
       const index = todos.findIndex(
-        (todo) => todo["$id"] === updatedTodo["$id"]
+        (todo) => todo['$id'] === updatedTodo['$id']
       );
       if (index !== -1) {
         todos.splice(index, 1, updatedTodo);
         patchState({
-            todos
-        })
+          todos,
+        });
       }
     } catch (e) {
       console.log('Failed to update todo');
     }
   }
 
-  @Action(DeleteTodo)
+  @Action(Todos.Delete)
   async deleteTodo(
     { patchState, getState }: StateContext<TodoStateModel>,
-    action: DeleteTodo
+    action: Todos.Delete
   ) {
     let { documentId } = action.payload;
     try {
-      await Api.provider().database.deleteDocument(Server.collectionID, documentId);
-      let todos = getState().todos
-      todos.filter((todo) => todo["$id"] !== documentId)
+      await Api.provider().database.deleteDocument(
+        Server.collectionID,
+        documentId
+      );
+      let todos = getState().todos;
+      todos.filter((todo) => todo['$id'] !== documentId);
       patchState({
-          todos
-      })
+        todos,
+      });
     } catch (e) {
       console.log('Failed to delete todo');
     }

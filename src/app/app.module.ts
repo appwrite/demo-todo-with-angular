@@ -11,6 +11,8 @@ import { SignupComponent } from './components/signup/signup.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { AppState } from './store';
 
 @NgModule({
@@ -27,7 +29,9 @@ import { AppState } from './store';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    NgxsModule.forRoot(AppState)
+    NgxsModule.forRoot(AppState),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

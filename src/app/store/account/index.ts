@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Api } from 'src/app/helpers/api';
 
@@ -9,25 +10,27 @@ export class AccountStateModel {
   session: object | null;
 }
 
-/** Actions */
-export class Signup {
-  static readonly type = '[Auth] Signup';
-  constructor(
-    public payload: { email: string; password: string; name: string }
-  ) {}
-}
+export namespace Account {
+  /** Actions */
+  export class Signup {
+    static readonly type = '[Auth] Signup';
+    constructor(
+      public payload: { email: string; password: string; name: string }
+    ) {}
+  }
 
-export class FetchAccount {
-  static readonly type = '[Auth] FetchAccount';
-}
+  export class FetchAccount {
+    static readonly type = '[Auth] FetchAccount';
+  }
 
-export class Login {
-  static readonly type = '[Auth] Login';
-  constructor(public payload: { email: string; password: string }) {}
-}
+  export class Login {
+    static readonly type = '[Auth] Login';
+    constructor(public payload: { email: string; password: string }) {}
+  }
 
-export class Logout {
-  static readonly type = '[Auth] Logout';
+  export class Logout {
+    static readonly type = '[Auth] Logout';
+  }
 }
 
 @State<AccountStateModel>({
@@ -39,6 +42,9 @@ export class Logout {
 })
 @Injectable()
 export class AccountState {
+
+  constructor(private rotuer: Router) {}
+
   @Selector()
   static account(state: AccountStateModel): object | null {
     return state.account;
@@ -49,41 +55,44 @@ export class AccountState {
     return !!state.account;
   }
 
-  @Action(Login)
-  async login({ patchState }: StateContext<AccountStateModel>, action: Login) {
+  @Action(Account.Login)
+  async login({ patchState, dispatch }: StateContext<AccountStateModel>, action: Account.Login) {
     let { email, password } = action.payload;
     try {
       await Api.provider().account.createSession(email, password);
-      let account = Api.provider().account.get();
+      let account = await Api.provider().account.get();
       patchState({
         account: account,
       });
+      this.rotuer.navigate(['/todos'])
     } catch (e) {
       console.log('Error Logging in');
     }
   }
 
-  @Action(Signup)
+  @Action(Account.Signup)
   async signup(
     { patchState }: StateContext<AccountStateModel>,
-    action: Signup
+    action: Account.Signup
   ) {
     let { email, password, name } = action.payload;
     try {
       let account = await Api.provider().account.create(email, password, name);
-      await Api.provider().account.createSession(email, password);
+      let session = await Api.provider().account.createSession(email, password);
       patchState({
-        account: account,
+        account,
+        session,
       });
+      this.rotuer.navigate(['/todos'])
     } catch (e) {
       console.log('Error creating Account');
     }
   }
 
-  @Action(FetchAccount)
+  @Action(Account.FetchAccount)
   async fetchAccount(
     { patchState }: StateContext<AccountStateModel>,
-    action: FetchAccount
+    action: Account.FetchAccount
   ) {
     try {
       let account = await Api.provider().account.get();
@@ -95,15 +104,16 @@ export class AccountState {
     }
   }
 
-  @Action(Logout)
+  @Action(Account.Logout)
   async logout(
     { patchState }: StateContext<AccountStateModel>,
-    action: Logout
+    action: Account.Logout
   ) {
     try {
       await Api.provider().account.deleteSession('current');
       patchState({
         account: null,
+        session: null,
       });
     } catch (e) {
       console.log('Error Loggin Out');
