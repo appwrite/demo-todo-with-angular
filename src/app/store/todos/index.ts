@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import * as Appwrite from 'appwrite';
 import { Server } from '../../utils/config';
 import { Todo } from 'src/app/models/Todo';
+import { Api } from 'src/app/helpers/api';
 
 /** State Model */
 export class TodoStateModel {
@@ -51,15 +51,13 @@ export class TodoState {
     return state.todos;
   }
 
-  constructor(private api: Appwrite) {}
-
   @Action(FetchTodos)
   async fetchTodos(
     { patchState }: StateContext<TodoStateModel>,
     action: FetchTodos
   ) {
     try {
-      let todos = (await this.api.database.listDocuments(
+      let todos = (await Api.provider().database.listDocuments(
         Server.collectionID
       )) as [];
       patchState({
@@ -77,7 +75,7 @@ export class TodoState {
   ) {
     try {
       let { data, read, write } = action.payload;
-      let todo = (await this.api.database.createDocument(
+      let todo = (await  Api.provider().database.createDocument(
         Server.collectionID,
         data,
         read,
@@ -100,7 +98,7 @@ export class TodoState {
   ) {
     let { documentId, data, read, write } = action.payload;
     try {
-      let updatedTodo = await this.api.database.updateDocument(
+      let updatedTodo = await Api.provider().database.updateDocument(
         Server.collectionID,
         documentId,
         data,
@@ -129,7 +127,7 @@ export class TodoState {
   ) {
     let { documentId } = action.payload;
     try {
-      await this.api.database.deleteDocument(Server.collectionID, documentId);
+      await Api.provider().database.deleteDocument(Server.collectionID, documentId);
       let todos = getState().todos
       todos.filter((todo) => todo["$id"] !== documentId)
       patchState({

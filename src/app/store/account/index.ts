@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import * as Appwrite from 'appwrite';
-import { tap } from 'rxjs/operators';
+import { Api } from 'src/app/helpers/api';
 
 /* State Model */
-export interface AccountStateModel {
+@Injectable()
+export class AccountStateModel {
   account: object | null;
   session: object | null;
 }
@@ -38,7 +38,7 @@ export class Logout {
   },
 })
 @Injectable()
-export class AuthState {
+export class AccountState {
   @Selector()
   static account(state: AccountStateModel): object | null {
     return state.account;
@@ -49,14 +49,12 @@ export class AuthState {
     return !!state.account;
   }
 
-  constructor(private api: Appwrite) {}
-
   @Action(Login)
   async login({ patchState }: StateContext<AccountStateModel>, action: Login) {
     let { email, password } = action.payload;
     try {
-      await this.api.account.createSession(email, password);
-      let account = this.api.account.get();
+      await Api.provider().account.createSession(email, password);
+      let account = Api.provider().account.get();
       patchState({
         account: account,
       });
@@ -72,8 +70,8 @@ export class AuthState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = await this.api.account.create(email, password, name);
-      await this.api.account.createSession(email, password);
+      let account = await Api.provider().account.create(email, password, name);
+      await Api.provider().account.createSession(email, password);
       patchState({
         account: account,
       });
@@ -88,7 +86,7 @@ export class AuthState {
     action: FetchAccount
   ) {
     try {
-      let account = await this.api.account.get();
+      let account = await Api.provider().account.get();
       patchState({
         account: account,
       });
@@ -103,7 +101,7 @@ export class AuthState {
     action: Logout
   ) {
     try {
-      await this.api.account.deleteSession('current');
+      await Api.provider().account.deleteSession('current');
       patchState({
         account: null,
       });
