@@ -3,10 +3,21 @@ import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Api } from 'src/app/helpers/api';
 
+
+export type Account = {
+  $id: string,
+  email: string,
+  emailVerification: boolean,
+  name: string,
+  registration: number,
+  status: number, 
+  prefs: object
+}
+
 /* State Model */
 @Injectable()
 export class AccountStateModel {
-  account: object | null;
+  account: Account | null;
   session: object | null;
 }
 
@@ -52,8 +63,8 @@ export class AccountState {
   constructor(private router: Router) {}
 
   @Selector()
-  static account(state: AccountStateModel): object | null {
-    return state.account;
+  static userId(state: AccountStateModel) {
+    return state.account['$id'];
   }
 
   @Selector()
@@ -66,7 +77,7 @@ export class AccountState {
     let { email, password } = action.payload;
     try {
       await Api.provider().account.createSession(email, password);
-      let account = await Api.provider().account.get();
+      let account = await Api.provider().account.get() as Account;
       patchState({
         account: account,
       });
@@ -83,7 +94,7 @@ export class AccountState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = await Api.provider().account.create(email, password, name);
+      let account = await Api.provider().account.create(email, password, name) as Account;
       let session = await Api.provider().account.createSession(email, password);
       patchState({
         account,
@@ -101,7 +112,7 @@ export class AccountState {
     action: Account.FetchAccount
   ) {
     try {
-      let account = await Api.provider().account.get();
+      let account = await Api.provider().account.get() as Account;
       patchState({
         account: account,
       });

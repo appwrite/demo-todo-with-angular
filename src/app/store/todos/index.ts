@@ -6,7 +6,7 @@ import { Api } from 'src/app/helpers/api';
 
 /** State Model */
 export class TodoStateModel {
-  todos: any[];
+  todos: Array<any>;
 }
 
 export namespace Todos {
@@ -49,7 +49,7 @@ export namespace Todos {
 @Injectable()
 export class TodoState {
   @Selector()
-  static getTodos(state: TodoStateModel): Todo[] | Array<Todo> {
+  static getTodos(state: TodoStateModel): Todo[] {
     return state.todos;
   }
 
@@ -61,9 +61,9 @@ export class TodoState {
     try {
       let todos = (await Api.provider().database.listDocuments(
         Server.collectionID
-      )) as [];
+      )) as Record<string,any>;
       patchState({
-        todos: todos,
+        todos: todos.documents,
       });
     } catch (e) {
       console.log('Failed to fetch todos');

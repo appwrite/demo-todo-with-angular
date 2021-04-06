@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Todos, TodoState } from 'src/app/store';
 
 @Component({
   selector: 'app-todo-item',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TodoItemComponent implements OnInit {
 
-  constructor() { }
+  @Input() todo: any;
+
+  constructor(private store: Store) { }
 
   ngOnInit(): void {
+  }
+
+  deleteTodo(id: string){
+    console.log(id)
+    this.store.dispatch(new Todos.Delete({documentId : id}))
   }
 
 }

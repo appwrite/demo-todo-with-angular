@@ -1,22 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { Account } from 'src/app/store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { Todo } from 'src/app/models/Todo';
+import { Account, AccountState, Todos, TodoState } from 'src/app/store';
 
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.css']
+  styleUrls: ['./todo.component.css'],
 })
-export class TodoComponent implements OnInit {
+export class TodoComponent {
+  @Select(TodoState.getTodos) todos$: Observable<Array<any>>;
 
-  constructor(private store: Store) { }
+  addTodoForm: FormGroup;
 
-  ngOnInit(): void {
+  constructor(private store: Store, private formbuilder: FormBuilder) {
+    this.getTodos();
+    this.addTodoForm = this.formbuilder.group({
+      content: ['', [Validators.required]],
+    });
+  }
+
+  getTodos() {
+    this.store.dispatch(new Todos.Fetch());
+  }
+
+  addTodo() {
+    const data: Todo = {
+      content: this.addTodoForm.value.content,
+      isComplete: false,
+    };
+    const userId = this.store.selectSnapshot(AccountState.userId);
+    const read = [`user:${userId}`];
+    const write = read;
+    this.store.dispatch(new Todos.Add({ data, read, write }));
   }
 
   handleLogout() {
-    console.log("Logging Out ...")
-    this.store.dispatch(new Account.Logout())
+    this.store.dispatch(new Account.Logout());
   }
-
 }

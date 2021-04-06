@@ -11,17 +11,17 @@ import { Account } from 'src/app/store';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
 
-  constructor(private formBuilder: FormBuilder, private store: Store) {
+  constructor(private formBuilder: FormBuilder, private store: Store) {}
+
+  ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
   }
 
-  ngOnInit(): void {}
-
   handleLogin() {
-    console.log("Logging in");
+    console.log("Logging in", this.loginForm.value);
     let payload = {
       email : this.loginForm.value.email,
       password: this.loginForm.value.password
