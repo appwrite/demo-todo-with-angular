@@ -134,7 +134,7 @@ export class TodoState {
         documentId
       );
       let todos = getState().todos;
-      todos.filter((todo) => todo['$id'] !== documentId);
+      todos = todos.filter((todo) => todo['$id'] !== documentId);
       patchState({
         todos,
       });
