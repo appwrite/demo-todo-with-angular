@@ -23,7 +23,7 @@ export namespace Todos {
   }
 
   export class Update {
-    static readonly type = '[Auth] DeleteTodo';
+    static readonly type = '[Todo] UpdateTodo';
     constructor(
       public payload: {
         documentId: string;
@@ -61,7 +61,7 @@ export class TodoState {
     try {
       let todos = (await Api.provider().database.listDocuments(
         Server.collectionID
-      )) as Record<string,any>;
+      )) as Record<string, any>;
       patchState({
         todos: todos.documents,
       });
