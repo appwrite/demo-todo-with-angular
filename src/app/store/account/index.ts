@@ -31,6 +31,12 @@ export namespace Account {
   export class Logout {
     static readonly type = '[Auth] Logout';
   }
+
+  /** Events */
+  export class Redirect {
+    static readonly type = '[Auth] AccountRedirect';
+    constructor(public payload: { path: string }) {}
+  }
 }
 
 @State<AccountStateModel>({
@@ -43,7 +49,7 @@ export namespace Account {
 @Injectable()
 export class AccountState {
 
-  constructor(private rotuer: Router) {}
+  constructor(private router: Router) {}
 
   @Selector()
   static account(state: AccountStateModel): object | null {
@@ -64,7 +70,7 @@ export class AccountState {
       patchState({
         account: account,
       });
-      this.rotuer.navigate(['/todos'])
+      dispatch(new Account.Redirect({ path : '/todos'}))
     } catch (e) {
       console.log('Error Logging in');
     }
@@ -72,7 +78,7 @@ export class AccountState {
 
   @Action(Account.Signup)
   async signup(
-    { patchState }: StateContext<AccountStateModel>,
+    { patchState, dispatch }: StateContext<AccountStateModel>,
     action: Account.Signup
   ) {
     let { email, password, name } = action.payload;
@@ -83,7 +89,7 @@ export class AccountState {
         account,
         session,
       });
-      this.rotuer.navigate(['/todos'])
+      dispatch(new Account.Redirect({ path : 'todos'}))
     } catch (e) {
       console.log('Error creating Account');
     }
@@ -106,7 +112,7 @@ export class AccountState {
 
   @Action(Account.Logout)
   async logout(
-    { patchState }: StateContext<AccountStateModel>,
+    { patchState, dispatch }: StateContext<AccountStateModel>,
     action: Account.Logout
   ) {
     try {
@@ -115,8 +121,15 @@ export class AccountState {
         account: null,
         session: null,
       });
+      dispatch(new Account.Redirect({ path : ''}))
     } catch (e) {
       console.log('Error Loggin Out');
     }
+  }
+
+  @Action(Account.Redirect)
+  redirect( ctx: StateContext<AccountStateModel>, action: Account.Redirect) {
+    const { path } = action.payload; 
+    this.router.navigate([path])
   }
 }

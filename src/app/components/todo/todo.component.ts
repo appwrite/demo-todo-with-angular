@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Account } from 'src/app/store';
 
 @Component({
   selector: 'app-todo',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TodoComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store) { }
 
   ngOnInit(): void {
+  }
+
+  handleLogout() {
+    console.log("Logging Out ...")
+    this.store.dispatch(new Account.Logout())
   }
 
 }
