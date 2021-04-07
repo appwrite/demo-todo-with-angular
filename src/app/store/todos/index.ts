@@ -3,6 +3,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Server } from '../../utils/config';
 import { Todo } from 'src/app/models/Todo';
 import { Api } from 'src/app/helpers/api';
+import { GlobalActions } from '../global';
 
 /** State Model */
 export class TodoStateModel {
@@ -19,7 +20,7 @@ export namespace Todos {
     static readonly type = '[Todo] AddTodo';
     constructor(
       public payload: { data: Todo; read: string[]; write: string[] }
-    ) {}
+    ) { }
   }
 
   export class Update {
@@ -31,12 +32,12 @@ export namespace Todos {
         read: string[];
         write: string[];
       }
-    ) {}
+    ) { }
   }
 
   export class Delete {
     static readonly type = '[Todo] DeleteTodo';
-    constructor(public payload: { documentId: string }) {}
+    constructor(public payload: { documentId: string }) { }
   }
 }
 
@@ -49,30 +50,37 @@ export namespace Todos {
 @Injectable()
 export class TodoState {
   @Selector()
-  static getTodos(state: TodoStateModel): Todo[] {
+  static getTodos(state: TodoStateModel) {
     return state.todos;
   }
 
   @Action(Todos.Fetch)
   async fetchTodos(
-    { patchState }: StateContext<TodoStateModel>,
+    { setState, dispatch }: StateContext<TodoStateModel>,
     action: Todos.Fetch
   ) {
     try {
       let todos = (await Api.provider().database.listDocuments(
         Server.collectionID
       )) as Record<string, any>;
-      patchState({
+      setState({
         todos: todos.documents,
       });
     } catch (e) {
       console.log('Failed to fetch todos');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
   @Action(Todos.Add)
   async addTodo(
-    { patchState, getState }: StateContext<TodoStateModel>,
+    { patchState, getState, dispatch }: StateContext<TodoStateModel>,
     action: Todos.Add
   ) {
     try {
@@ -84,18 +92,24 @@ export class TodoState {
         write
       );
       var todos = getState().todos;
-      todos.unshift(todo);
       patchState({
-        todos,
+        todos: [...todos, todo],
       });
     } catch (e) {
       console.log('Failed to add todo');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
   @Action(Todos.Update)
   async updateTodo(
-    { patchState, getState }: StateContext<TodoStateModel>,
+    { patchState, getState, dispatch }: StateContext<TodoStateModel>,
     action: Todos.Update
   ) {
     let { documentId, data, read, write } = action.payload;
@@ -107,24 +121,31 @@ export class TodoState {
         read,
         write
       )) as any;
-      let todos = getState().todos;
-      const index = todos.findIndex(
+      let todoList = [...getState().todos];
+      const index = todoList.findIndex(
         (todo) => todo['$id'] === updatedTodo['$id']
       );
       if (index !== -1) {
-        todos.splice(index, 1, updatedTodo);
+        todoList[index] = updatedTodo;
         patchState({
-          todos,
+          todos: todoList,
         });
       }
     } catch (e) {
       console.log('Failed to update todo');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
   @Action(Todos.Delete)
   async deleteTodo(
-    { patchState, getState }: StateContext<TodoStateModel>,
+    { patchState, getState, dispatch }: StateContext<TodoStateModel>,
     action: Todos.Delete
   ) {
     let { documentId } = action.payload;
@@ -140,6 +161,13 @@ export class TodoState {
       });
     } catch (e) {
       console.log('Failed to delete todo');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 }

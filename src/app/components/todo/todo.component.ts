@@ -11,19 +11,16 @@ import { Account, AccountState, Todos, TodoState } from 'src/app/store';
   styleUrls: ['./todo.component.css'],
 })
 export class TodoComponent {
-  @Select(TodoState.getTodos) todos$: Observable<Array<any>>;
+  
+  @Select(TodoState.getTodos) todos$: Observable<any>;
 
   addTodoForm: FormGroup;
 
   constructor(private store: Store, private formbuilder: FormBuilder) {
-    this.getTodos();
+    this.store.dispatch(new Todos.Fetch());
     this.addTodoForm = this.formbuilder.group({
       content: ['', [Validators.required]],
     });
-  }
-
-  getTodos() {
-    this.store.dispatch(new Todos.Fetch());
   }
 
   addTodo() {

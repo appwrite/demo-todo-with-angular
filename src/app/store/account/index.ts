@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Api } from 'src/app/helpers/api';
-
+import { GlobalActions } from '../global';
 
 export type Account = {
-  $id: string,
-  email: string,
-  emailVerification: boolean,
-  name: string,
-  registration: number,
-  status: number, 
-  prefs: object
-}
+  $id: string;
+  email: string;
+  emailVerification: boolean;
+  name: string;
+  registration: number;
+  status: number;
+  prefs: object;
+};
 
 /* State Model */
 @Injectable()
@@ -59,7 +59,6 @@ export namespace Account {
 })
 @Injectable()
 export class AccountState {
-
   constructor(private router: Router) {}
 
   @Selector()
@@ -73,17 +72,27 @@ export class AccountState {
   }
 
   @Action(Account.Login)
-  async login({ patchState, dispatch }: StateContext<AccountStateModel>, action: Account.Login) {
+  async login(
+    { patchState, dispatch }: StateContext<AccountStateModel>,
+    action: Account.Login
+  ) {
     let { email, password } = action.payload;
     try {
       await Api.provider().account.createSession(email, password);
-      let account = await Api.provider().account.get() as Account;
+      let account = (await Api.provider().account.get()) as Account;
       patchState({
         account: account,
       });
-      dispatch(new Account.Redirect({ path : '/todos'}))
+      dispatch(new Account.Redirect({ path: '/todos' }));
     } catch (e) {
       console.log('Error Logging in');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
@@ -94,30 +103,48 @@ export class AccountState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = await Api.provider().account.create(email, password, name) as Account;
+      let account = (await Api.provider().account.create(
+        email,
+        password,
+        name
+      )) as Account;
       let session = await Api.provider().account.createSession(email, password);
       patchState({
         account,
         session,
       });
-      dispatch(new Account.Redirect({ path : 'todos'}))
+      dispatch(new Account.Redirect({ path: 'todos' }));
     } catch (e) {
       console.log('Error creating Account');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
   @Action(Account.FetchAccount)
   async fetchAccount(
-    { patchState }: StateContext<AccountStateModel>,
+    { patchState, dispatch }: StateContext<AccountStateModel>,
     action: Account.FetchAccount
   ) {
     try {
-      let account = await Api.provider().account.get() as Account;
+      let account = (await Api.provider().account.get()) as Account;
       patchState({
         account: account,
       });
     } catch (e) {
       console.log('Error fetching Account');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
@@ -132,15 +159,22 @@ export class AccountState {
         account: null,
         session: null,
       });
-      dispatch(new Account.Redirect({ path : ''}))
+      dispatch(new Account.Redirect({ path: '' }));
     } catch (e) {
       console.log('Error Loggin Out');
+      dispatch(
+        new GlobalActions.setAlert({
+          message: e.message,
+          show: true,
+          color: 'red',
+        })
+      );
     }
   }
 
   @Action(Account.Redirect)
-  redirect( ctx: StateContext<AccountStateModel>, action: Account.Redirect) {
-    const { path } = action.payload; 
-    this.router.navigate([path])
+  redirect(ctx: StateContext<AccountStateModel>, action: Account.Redirect) {
+    const { path } = action.payload;
+    this.router.navigate([path]);
   }
 }

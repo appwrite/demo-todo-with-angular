@@ -16,9 +16,10 @@
     (click)="deleteTodo(todo['$id'])"
     class="focus:outline-none transition duration-75 ease-in-out transform hover:scale-125"
   >
-    <img
-      class="w-6 h-6 inline stroke-current text-red-500"
+    <svg-icon
+    [applyClass]="true"
+      class="w-6 h-6 text-red-500 focus:outline-none transition duration-75 ease-in-out transform hover:scale-125"
       src="../assets/delete.svg"
-    />
+    ></svg-icon>
   </button>
 </li>

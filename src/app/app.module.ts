@@ -13,6 +13,9 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { AppState } from './store';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -28,9 +31,13 @@ import { AppState } from './store';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    NgxsModule.forRoot(AppState),
+    NgxsModule.forRoot(AppState, {
+      developmentMode: !environment.production
+    }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
+    HttpClientModule, 
+    AngularSvgIconModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
