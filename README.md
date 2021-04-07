@@ -36,19 +36,13 @@ Add the following permissions to your collections. These permissions ensure that
 </p>
 
 ### 🚀 Deploy the Front End
-You have two options to deploy the front-end and we will cover both of them here. In either case, you will need to fill in these environment variables that help your frontend connect to Appwrite.
-
-* APP_ENDPOINT - Your Appwrite endpoint
-* APP_PROJECT - Your Appwrite project ID
-* APP_COLLECTION_ID - Your Appwrite collection ID 
-
+You have two options to deploy the front-end and we will cover both of them here.
 ### **Deploy to a Static Hosting Provider**
 
-Use the following buttons to deploy to your favourite hosting provider in one click! We support Vercel, Netlify and DigitalOcean. You will need to enter the environment variables above when prompted.
+Use the following buttons to deploy to your favourite hosting provider in one click! We support Vercel, Netlify and DigitalOcean. 
 
-> Note: Vercel is unable to auto detect the framework so please use the angular Framework in case of vercel.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fappwrite%2Ftodo-with-angular&env=APP_ENDPOINT,APP_PROJECT,APP_COLLECTION_ID&envDescription=Your%20Appwrite%20Endpoint%2C%20Project%20ID%20and%20Collection%20ID%20)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fappwrite%2Ftodo-with-angular)
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/appwrite/todo-with-angular)
 
@@ -56,23 +50,11 @@ Use the following buttons to deploy to your favourite hosting provider in one cl
 
 ### **Run locally**
 
-Follow these instructions to run the demo app locally
+Follow these instructions to run the demo app locally 💪🏼 
 
 ```sh
 $ git clone https://github.com/appwrite/todo-with-angular
 $ cd todo-with-angular
-```
-
-Run the following command to generate your `.env` vars  
-
-```sh
-$ cp .env.example .env
-```
-
-Now fill in the envrionment variables we discussed above in your `.env`
-
-Now run the following commands and you should be good to go 💪🏼 
-```
 $ npm install
 $ npm start
 ```
