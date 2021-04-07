@@ -20,9 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.actions.pipe(ofActionSuccessful(Account.FetchAccount)).subscribe(() => {
-      this.router.navigate(['/todos']);
-    });
+    // this.actions.pipe(ofActionSuccessful(Account.FetchAccount)).subscribe(() => {
+    //   this.router.navigate(['/todos']);
+    // });
   }
 
   ngOnDestroy() {
