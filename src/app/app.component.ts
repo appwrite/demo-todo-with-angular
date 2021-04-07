@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, ofActionDispatched, ofActionSuccessful, Select, Selector, Store } from '@ngxs/store';
+import { Actions, ofActionSuccessful, Select, Selector, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Account, Alert, GlobalState } from './store';
 
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private actions: Actions, private store: Store, private router: Router) {
     this.store.dispatch(new Account.FetchAccount())
+    
   }
 
   ngOnInit() {

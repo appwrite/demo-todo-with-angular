@@ -8,16 +8,18 @@ import { Account } from 'src/app/store';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit{
   loginForm: FormGroup
 
-  constructor(private formBuilder: FormBuilder, private store: Store) {}
-
-  ngOnInit(): void {
+  constructor(private formBuilder: FormBuilder, private store: Store) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.loginForm.updateValueAndValidity()
   }
 
   handleLogin() {
