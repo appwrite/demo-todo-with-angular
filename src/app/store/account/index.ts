@@ -161,6 +161,7 @@ export class AccountState {
       });
       dispatch(new Account.Redirect({ path: '' }));
     } catch (e) {
+      // “Programming can be fun, and so can cryptography; however, they should not be combined.”
       console.log('Error Loggin Out');
       dispatch(
         new GlobalActions.setAlert({
