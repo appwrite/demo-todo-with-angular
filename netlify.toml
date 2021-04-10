@@ -6,8 +6,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[template.environment]
-  APP_ENDPOINT = "Your Appwrite Server Endpoint"
-  APP_PROJECT = "Your Appwrite project ID"
-  APP_COLLECTION_ID = "Your Collection ID"
