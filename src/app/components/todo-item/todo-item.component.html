@@ -1,0 +1,25 @@
+<li class="flex justify-between items-center mt-4 px-4">
+  <div class="flex">
+    <input
+      type="checkbox"
+      [checked]="todo.isComplete"
+      (change)="toggleTodo(todo['$id'], todo)"
+      class="h-6 w-6 text-green-500 rounded-md border-4 border-green-200 focus:ring-0 transition duration-75 ease-in-out transform hover:scale-125"
+    />
+    <div
+      [ngClass]="['capitalize ml-3 text-md font-medium', todo.isComplete ? 'line-through' : '' ]"
+    >
+      {{ todo.content }}
+    </div>
+  </div>
+  <button
+    (click)="deleteTodo(todo['$id'])"
+    class="focus:outline-none transition duration-75 ease-in-out transform hover:scale-125"
+  >
+    <svg-icon
+    [applyClass]="true"
+      class="w-6 h-6 text-red-500 focus:outline-none transition duration-75 ease-in-out transform hover:scale-125"
+      src="../assets/delete.svg"
+    ></svg-icon>
+  </button>
+</li>
