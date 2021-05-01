@@ -51,7 +51,6 @@
  *  with the following flag, it will bypass `zone.js` patch for IE/Edge
  *
  *  (window as any).__Zone_enable_cross_context_check = true;
- * “Always code as if the person who ends up maintaining your code will be a violent psychopath who knows where you live.” 
  *
  */
 
