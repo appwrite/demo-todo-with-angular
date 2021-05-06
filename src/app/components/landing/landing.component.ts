@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LandingComponent implements OnInit {
 
-  // “When I wrote this code, only God and I understood what I did. Now only God knows.”
   constructor() { }
 
   ngOnInit(): void {
