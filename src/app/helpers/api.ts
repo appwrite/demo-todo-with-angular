@@ -1,4 +1,4 @@
-import * as Appwrite from 'appwrite';
+import { Appwrite } from 'appwrite';
 import { Server } from '../utils/config';
 
 export class Api {

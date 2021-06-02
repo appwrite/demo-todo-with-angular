@@ -24,7 +24,7 @@
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/typography": "^0.4.0",
     "angular-svg-icon": "^11.2.0",
-    "appwrite": "^2.0.0",
+    "appwrite": "^3.0.1",
     "rxjs": "^6.6.7",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
