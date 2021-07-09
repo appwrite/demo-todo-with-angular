@@ -2,7 +2,6 @@ import { Appwrite } from 'appwrite';
 import { Server } from '../utils/config';
 
 export class Api {
-  // “How many programmers does it take to change a light bulb? None, that’s a hardware problem.” 
   private static sdk: Appwrite | null;
 
   static provider() {
