@@ -3,9 +3,9 @@
     <h1 class="text-6xl font-bold">Sign Up</h1>
     <p class="mt-4">
       Already have an account ?
-      <span [routerLink]="'/login'" class="cursor-pointer underline">
+      <a [routerLink]="'/login'" href="/login" class="cursor-pointer underline">
         Login
-      </span>
+      </a>
     </p>
     <form [formGroup]="signupForm" (submit)="handleSignup()">
       <label class="block mt-6"> Name</label>
@@ -32,7 +32,7 @@
         <button
           [disabled]="signupForm.invalid"
           type="submit"
-          class="mx-auto mt-4 py-4 px-16 font-semibold rounded-lg shadow-md bg-gray-900 text-white border hover:border-gray-900 hover:text-gray-900 hover:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          class="mx-auto mt-4 py-4 px-16 font-semibold rounded-lg shadow-md bg-gray-900 text-white border hover:border-gray-900 hover:text-gray-900 hover:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed focus:border-gray-900 focus:text-gray-900 focus:bg-white"
         >
           Sign Up
         </button>
