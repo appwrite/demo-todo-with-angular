@@ -108,7 +108,7 @@ export class AccountState {
         password,
         name
       )) as Account;
-      let session = await Api.provider().account.createSession(email, password);
+      let session: object = await Api.provider().account.createSession(email, password);
       patchState({
         account,
         session,
