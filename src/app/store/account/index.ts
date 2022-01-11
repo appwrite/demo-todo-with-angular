@@ -79,12 +79,12 @@ export class AccountState {
     let { email, password } = action.payload;
     try {
       await Api.provider().account.createSession(email, password);
-      let account = (await Api.provider().account.get()) as Account;
+      let account = await Api.provider().account.get() as unknown as Account;
       patchState({
         account: account,
       });
       dispatch(new Account.Redirect({ path: '/todos' }));
-    } catch (e) {
+    } catch (e: any) {
       console.log('Error Logging in');
       dispatch(
         new GlobalActions.setAlert({
@@ -107,14 +107,14 @@ export class AccountState {
         email,
         password,
         name
-      )) as Account;
+      )) as unknown as Account;
       let session: object = await Api.provider().account.createSession(email, password);
       patchState({
         account,
         session,
       });
       dispatch(new Account.Redirect({ path: 'todos' }));
-    } catch (e) {
+    } catch (e: any) {
       console.log('Error creating Account');
       dispatch(
         new GlobalActions.setAlert({
@@ -132,11 +132,11 @@ export class AccountState {
     action: Account.FetchAccount
   ) {
     try {
-      let account = (await Api.provider().account.get()) as Account;
+      let account = await Api.provider().account.get() as unknown as Account;
       patchState({
         account: account,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Error fetching Account');
       dispatch(
         new GlobalActions.setAlert({
@@ -160,7 +160,7 @@ export class AccountState {
         session: null,
       });
       dispatch(new Account.Redirect({ path: '' }));
-    } catch (e) {      
+    } catch (e: any) {      
       console.log('Error Loggin Out');
       dispatch(
         new GlobalActions.setAlert({

@@ -66,7 +66,7 @@ export class TodoState {
       setState({
         todos: todos.documents,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to fetch todos');
       dispatch(
         new GlobalActions.setAlert({
@@ -87,6 +87,7 @@ export class TodoState {
       let { data, read, write } = action.payload;
       let todo = await Api.provider().database.createDocument(
         Server.collectionID,
+        'unique()',
         data,
         read,
         write
@@ -95,7 +96,7 @@ export class TodoState {
       patchState({
         todos: [...todos, todo],
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to add todo');
       dispatch(
         new GlobalActions.setAlert({
@@ -131,7 +132,7 @@ export class TodoState {
           todos: todoList,
         });
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to update todo');
       dispatch(
         new GlobalActions.setAlert({
@@ -159,7 +160,7 @@ export class TodoState {
       patchState({
         todos,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to delete todo');
       dispatch(
         new GlobalActions.setAlert({
