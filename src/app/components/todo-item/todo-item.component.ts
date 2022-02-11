@@ -9,7 +9,7 @@ import { AccountState, Todos } from 'src/app/store';
   styleUrls: ['./todo-item.component.css'],
 })
 export class TodoItemComponent implements OnInit {
-  @Input() todo: any;
+  @Input() todo: Todo;
 
   constructor(private store: Store) {}
 

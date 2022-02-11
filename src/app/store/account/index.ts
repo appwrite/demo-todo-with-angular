@@ -1,24 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Models } from 'appwrite';
 import { Api } from 'src/app/helpers/api';
 import { GlobalActions } from '../global';
-
-export type Account = {
-  $id: string;
-  email: string;
-  emailVerification: boolean;
-  name: string;
-  registration: number;
-  status: number;
-  prefs: object;
-};
 
 /* State Model */
 @Injectable()
 export class AccountStateModel {
-  account: Account | null;
-  session: object | null;
+  account: Models.User<{}>;
+  session: Models.Session;
 }
 
 export namespace Account {
@@ -59,11 +50,11 @@ export namespace Account {
 })
 @Injectable()
 export class AccountState {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private ngZone: NgZone) {}
 
   @Selector()
   static userId(state: AccountStateModel) {
-    return state.account['$id'];
+    return state.account.$id;
   }
 
   @Selector()
@@ -79,7 +70,7 @@ export class AccountState {
     let { email, password } = action.payload;
     try {
       await Api.provider().account.createSession(email, password);
-      let account = await Api.provider().account.get() as unknown as Account;
+      let account = await Api.provider().account.get();
       patchState({
         account: account,
       });
@@ -103,12 +94,12 @@ export class AccountState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = (await Api.provider().account.create(
+      let account = await Api.provider().account.create(
         email,
         password,
         name
-      )) as unknown as Account;
-      let session: object = await Api.provider().account.createSession(email, password);
+      );
+      let session = await Api.provider().account.createSession(email, password);
       patchState({
         account,
         session,
@@ -132,7 +123,7 @@ export class AccountState {
     action: Account.FetchAccount
   ) {
     try {
-      let account = await Api.provider().account.get() as unknown as Account;
+      let account = await Api.provider().account.get();
       patchState({
         account: account,
       });
@@ -175,6 +166,8 @@ export class AccountState {
   @Action(Account.Redirect)
   redirect(ctx: StateContext<AccountStateModel>, action: Account.Redirect) {
     const { path } = action.payload;
-    this.router.navigate([path]);
+    this.ngZone.run(() => {
+      this.router.navigate([path]);
+    });
   }
 }

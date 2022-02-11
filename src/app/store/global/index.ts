@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 
 export type Alert = {
@@ -23,6 +24,7 @@ export namespace GlobalActions {
     alert: null,
   },
 })
+@Injectable()
 export class GlobalState {
   @Selector()
   static getAlert(state: GlobalStateModel) {

@@ -10,24 +10,27 @@ import { Account, AccountState, Todos, TodoState } from 'src/app/store';
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css'],
 })
-export class TodoComponent {
+export class TodoComponent implements OnInit {
   
-  @Select(TodoState.getTodos) todos$: Observable<any>;
+  @Select(TodoState.getTodos) todos$: Observable<Todo[]>;
 
   addTodoForm: FormGroup;
 
   constructor(private store: Store, private formbuilder: FormBuilder) {
-    this.store.dispatch(new Todos.Fetch());
     this.addTodoForm = this.formbuilder.group({
       content: ['', [Validators.required]],
     });
   }
+  
+  ngOnInit() {    
+    this.store.dispatch(new Todos.Fetch());
+  }
 
   addTodo() {
-    const data: Todo = {
+    const data = {
       content: this.addTodoForm.value.content,
       isComplete: false,
-    };
+    } as Todo;
     const userId = this.store.selectSnapshot(AccountState.userId);
     const read = [`user:${userId}`];
     const write = read;

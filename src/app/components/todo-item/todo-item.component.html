@@ -3,7 +3,7 @@
     <input
       type="checkbox"
       [checked]="todo.isComplete"
-      (change)="toggleTodo(todo['$id'], todo)"
+      (change)="toggleTodo(todo.$id, todo)"
       class="h-6 w-6 text-green-500 rounded-md border-4 border-green-200 focus:ring-0 transition duration-75 ease-in-out transform hover:scale-125"
     />
     <div
@@ -13,7 +13,7 @@
     </div>
   </div>
   <button
-    (click)="deleteTodo(todo['$id'])"
+    (click)="deleteTodo(todo.$id)"
     class="focus:outline-none transition duration-75 ease-in-out transform hover:scale-125"
   >
     <svg-icon
