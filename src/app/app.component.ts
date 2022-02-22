@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, ofActionSuccessful, Select, Selector, Store } from '@ngxs/store';
+import { Actions, Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Account, Alert, GlobalState } from './store';
 
@@ -9,7 +9,7 @@ import { Account, Alert, GlobalState } from './store';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   title = 'todo-with-angular';
 
   @Select(GlobalState.getAlert) alert: Observable<Alert>
@@ -18,15 +18,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store.dispatch(new Account.FetchAccount())
     
   }
-
-  ngOnInit() {
-    // this.actions.pipe(ofActionSuccessful(Account.FetchAccount)).subscribe(() => {
-    //   this.router.navigate(['/todos']);
-    // });
-  }
-
-  ngOnDestroy() {
-
-  }
-  
 }

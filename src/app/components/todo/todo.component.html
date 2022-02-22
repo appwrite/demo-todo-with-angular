@@ -7,7 +7,7 @@
       &nbsp; toTooooDoooos
     </div>
 
-    <form [formGroup]="addTodoForm" (submit)="addTodo()">
+    <form [formGroup]="addTodoForm" (ngSubmit)="addTodo()">
       <input
         formControlName="content"
         type="text"

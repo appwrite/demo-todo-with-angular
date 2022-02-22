@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { Server } from '../../utils/config';
+import { Models } from 'appwrite';
 import { Todo } from 'src/app/models/Todo';
 import { Api } from 'src/app/helpers/api';
+import { Server } from '../../utils/config';
 import { GlobalActions } from '../global';
 
 /** State Model */
 export class TodoStateModel {
-  todos: Array<any>;
+  todos: Array<Models.Document>;
 }
 
 export namespace Todos {
@@ -20,7 +21,7 @@ export namespace Todos {
     static readonly type = '[Todo] AddTodo';
     constructor(
       public payload: { data: Todo; read: string[]; write: string[] }
-    ) { }
+    ) {}
   }
 
   export class Update {
@@ -32,12 +33,12 @@ export namespace Todos {
         read: string[];
         write: string[];
       }
-    ) { }
+    ) {}
   }
 
   export class Delete {
     static readonly type = '[Todo] DeleteTodo';
-    constructor(public payload: { documentId: string }) { }
+    constructor(public payload: { documentId: string }) {}
   }
 }
 
@@ -60,13 +61,13 @@ export class TodoState {
     action: Todos.Fetch
   ) {
     try {
-      let todos = (await Api.provider().database.listDocuments(
+      let todos = await Api.provider().database.listDocuments(
         Server.collectionID
-      )) as Record<string, any>;
+      );
       setState({
         todos: todos.documents,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to fetch todos');
       dispatch(
         new GlobalActions.setAlert({
@@ -87,15 +88,16 @@ export class TodoState {
       let { data, read, write } = action.payload;
       let todo = await Api.provider().database.createDocument(
         Server.collectionID,
+        'unique()',
         data,
         read,
         write
       );
-      var todos = getState().todos;
+      const todos = getState().todos;
       patchState({
         todos: [...todos, todo],
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to add todo');
       dispatch(
         new GlobalActions.setAlert({
@@ -114,16 +116,16 @@ export class TodoState {
   ) {
     let { documentId, data, read, write } = action.payload;
     try {
-      let updatedTodo = (await Api.provider().database.updateDocument(
+      let updatedTodo = await Api.provider().database.updateDocument(
         Server.collectionID,
         documentId,
         data,
         read,
         write
-      )) as any;
+      );
       let todoList = [...getState().todos];
       const index = todoList.findIndex(
-        (todo) => todo['$id'] === updatedTodo['$id']
+        (todo) => todo.$id === updatedTodo.$id
       );
       if (index !== -1) {
         todoList[index] = updatedTodo;
@@ -131,7 +133,7 @@ export class TodoState {
           todos: todoList,
         });
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to update todo');
       dispatch(
         new GlobalActions.setAlert({
@@ -155,11 +157,11 @@ export class TodoState {
         documentId
       );
       let todos = getState().todos;
-      todos = todos.filter((todo) => todo['$id'] !== documentId);
+      todos = todos.filter((todo) => todo.$id !== documentId);
       patchState({
         todos,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('Failed to delete todo');
       dispatch(
         new GlobalActions.setAlert({
