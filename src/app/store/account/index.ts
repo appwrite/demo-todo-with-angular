@@ -95,6 +95,7 @@ export class AccountState {
     let { email, password, name } = action.payload;
     try {
       let account = await Api.provider().account.create(
+        'unique()',
         email,
         password,
         name
