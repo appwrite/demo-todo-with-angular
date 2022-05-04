@@ -24,6 +24,5 @@ export class AppwriteService {
       .setEndpoint(this.config.endpoint)
       .setProject(this.config.projectId)
       .setLocale('en-US');
-    return this.appwriteinstance;
   }
 }
