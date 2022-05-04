@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Models } from 'appwrite';
-import { Todo } from 'src/app/models/Todo';
-import { Api } from 'src/app/helpers/api';
-import { Server } from '../../utils/config';
+import { Todo } from '../../models/Todo';
 import { GlobalActions } from '../global';
+import { AppWriteConfig, AppWriteConfigToken, AppwriteService } from '../../service/appwrite.service';
 
 /** State Model */
 export class TodoStateModel {
@@ -50,6 +49,11 @@ export namespace Todos {
 })
 @Injectable()
 export class TodoState {
+  constructor(
+    private appWriteService: AppwriteService,
+    @Inject(AppWriteConfigToken) private config: AppWriteConfig
+  ) {}
+
   @Selector()
   static getTodos(state: TodoStateModel) {
     return state.todos;
@@ -61,9 +65,10 @@ export class TodoState {
     action: Todos.Fetch
   ) {
     try {
-      let todos = await Api.provider().database.listDocuments(
-        Server.collectionID
-      );
+      let todos =
+        await this.appWriteService.appwriteinstance.database.listDocuments(
+          this.config.collectionID
+        );
       setState({
         todos: todos.documents,
       });
@@ -86,13 +91,14 @@ export class TodoState {
   ) {
     try {
       let { data, read, write } = action.payload;
-      let todo = await Api.provider().database.createDocument(
-        Server.collectionID,
-        'unique()',
-        data,
-        read,
-        write
-      );
+      let todo =
+        await this.appWriteService.appwriteinstance.database.createDocument(
+          this.config.collectionID,
+          'unique()',
+          data,
+          read,
+          write
+        );
       const todos = getState().todos;
       patchState({
         todos: [...todos, todo],
@@ -116,17 +122,16 @@ export class TodoState {
   ) {
     let { documentId, data, read, write } = action.payload;
     try {
-      let updatedTodo = await Api.provider().database.updateDocument(
-        Server.collectionID,
-        documentId,
-        data,
-        read,
-        write
-      );
+      let updatedTodo =
+        await this.appWriteService.appwriteinstance.database.updateDocument(
+          this.config.collectionID,
+          documentId,
+          data,
+          read,
+          write
+        );
       let todoList = [...getState().todos];
-      const index = todoList.findIndex(
-        (todo) => todo.$id === updatedTodo.$id
-      );
+      const index = todoList.findIndex((todo) => todo.$id === updatedTodo.$id);
       if (index !== -1) {
         todoList[index] = updatedTodo;
         patchState({
@@ -152,8 +157,8 @@ export class TodoState {
   ) {
     let { documentId } = action.payload;
     try {
-      await Api.provider().database.deleteDocument(
-        Server.collectionID,
+      await this.appWriteService.appwriteinstance.database.deleteDocument(
+        this.config.collectionID,
         documentId
       );
       let todos = getState().todos;

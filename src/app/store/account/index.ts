@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Models } from 'appwrite';
-import { Api } from 'src/app/helpers/api';
+import { AppwriteService } from 'src/app/service/appwrite.service';
 import { GlobalActions } from '../global';
 
 /* State Model */
@@ -50,7 +50,8 @@ export namespace Account {
 })
 @Injectable()
 export class AccountState {
-  constructor(private router: Router, private ngZone: NgZone) {}
+  constructor(private router: Router, private ngZone: NgZone,
+    private appWriteService: AppwriteService) {}
 
   @Selector()
   static userId(state: AccountStateModel) {
@@ -69,8 +70,9 @@ export class AccountState {
   ) {
     let { email, password } = action.payload;
     try {
-      await Api.provider().account.createSession(email, password);
-      let account = await Api.provider().account.get();
+      await this.appWriteService.appwriteinstance.account.createSession(email, password);
+      let account = await this.appWriteService.appwriteinstance
+        .account.get();
       patchState({
         account: account,
       });
@@ -94,13 +96,17 @@ export class AccountState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = await Api.provider().account.create(
+      let account = await this.appWriteService.appwriteinstance.account.create(
         'unique()',
         email,
         password,
         name
       );
-      let session = await Api.provider().account.createSession(email, password);
+      let session =
+        await this.appWriteService.appwriteinstance.account.createSession(
+          email,
+          password
+        );
       patchState({
         account,
         session,
@@ -124,7 +130,7 @@ export class AccountState {
     action: Account.FetchAccount
   ) {
     try {
-      let account = await Api.provider().account.get();
+      let account = await this.appWriteService.appwriteinstance.account.get();
       patchState({
         account: account,
       });
@@ -146,7 +152,9 @@ export class AccountState {
     action: Account.Logout
   ) {
     try {
-      await Api.provider().account.deleteSession('current');
+      await this.appWriteService.appwriteinstance.account.deleteSession(
+        'current'
+      );
       patchState({
         account: null,
         session: null,

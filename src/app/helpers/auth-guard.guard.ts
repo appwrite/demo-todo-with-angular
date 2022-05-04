@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Api } from './api';
+import { AppwriteService } from '../service/appwrite.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private appWriteService: AppwriteService
+  ) {}
 
   canActivate(): Promise<boolean> {
-    return Api.provider()
-      .account.getSession('current')
+    return this.appWriteService.appwriteinstance.account
+      .getSession('current')
       .then((isAuthenticated) => {
         if (!isAuthenticated) {
           this.router.navigate(['/login']);
