@@ -69,7 +69,7 @@ export class AccountState {
   ) {
     let { email, password } = action.payload;
     try {
-      await Api.provider().account.createSession(email, password);
+      await Api.provider().account.createEmailSession(email, password);
       let account = await Api.provider().account.get();
       patchState({
         account: account,
@@ -100,7 +100,7 @@ export class AccountState {
         password,
         name
       );
-      let session = await Api.provider().account.createSession(email, password);
+      let session = await Api.provider().account.createEmailSession(email, password);
       patchState({
         account,
         session,
