@@ -116,6 +116,5 @@
         }
       }
     }
-  },
-  "defaultProject": "todo-with-angular"
+  }
 }

@@ -5,8 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TodoComponent } from './components/todo/todo.component';
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
-import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { SignupComponent } from './components/auth/signup/signup.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgxsModule } from '@ngxs/store';
@@ -36,7 +36,7 @@ import { environment } from 'src/environments/environment';
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
-    HttpClientModule, 
+    HttpClientModule,
     AngularSvgIconModule.forRoot()
   ],
   providers: [],
