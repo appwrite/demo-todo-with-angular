@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
-  APP_ENDPOINT: "https://demo.appwrite.io/v1",
-  APP_PROJECT: "6062f9c2c09ce",
-  APP_COLLECTION_ID:"606621a04837c"
+  APP_ENDPOINT: "http://localhost/v1",
+  APP_PROJECT: "62bb480464319f2e8b20",
+  APP_COLLECTION_ID:"62bb5949e18bd21fa642",
+  APP_DATABASE_ID: "62bb48c331ee6df21f4a"
 };
 
 /*

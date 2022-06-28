@@ -1,4 +1,4 @@
-<div
+<div *ngIf="alert?.message !== 'User (role: guest) missing scope (account)'"
   [ngClass]="['text-white px-6 py-4 border-0 rounded absolute right-0 top-0 mt-10 mr-10', 'bg-'+alert?.color+'-500']"
   >
   <span class="inline-block align-middle font-semibold mr-8"> {{alert?.message}} </span>
