@@ -1,8 +1,8 @@
-import { Appwrite } from 'appwrite';
+import { Account, Client as Appwrite, Databases } from 'appwrite';
 import { Server } from '../utils/config';
 
 export class Api {
-  private static sdk: Appwrite | null;
+  private static sdk: { account: Account, database: Databases } | null;
 
   static provider() {
     if (this.sdk) return this.sdk;
@@ -11,7 +11,10 @@ export class Api {
       .setEndpoint(Server.endpoint)
       .setProject(Server.project)
       .setLocale('en-US');
-    this.sdk = client;
+
+    const database = new Databases(client, Server.databaseID);
+    const account = new Account(client);
+    this.sdk = { account, database };
     return this.sdk;
   }
 }
