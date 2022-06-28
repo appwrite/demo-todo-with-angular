@@ -11,14 +11,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~13.1.1",
-    "@angular/common": "~13.1.1",
-    "@angular/compiler": "~13.1.1",
-    "@angular/core": "~13.1.1",
-    "@angular/forms": "~13.1.1",
-    "@angular/platform-browser": "~13.1.1",
-    "@angular/platform-browser-dynamic": "~13.1.1",
-    "@angular/router": "~13.1.1",
+    "@angular/animations": "~14.0.3",
+    "@angular/common": "~14.0.3",
+    "@angular/compiler": "~14.0.3",
+    "@angular/core": "~14.0.3",
+    "@angular/forms": "~14.0.3",
+    "@angular/platform-browser": "~14.0.3",
+    "@angular/platform-browser-dynamic": "~14.0.3",
+    "@angular/router": "~14.0.3",
     "@ngxs/logger-plugin": "^3.7.3",
     "@ngxs/store": "^3.7.3",
     "@tailwindcss/forms": "^0.3.2",
@@ -30,9 +30,9 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.1.2",
-    "@angular/cli": "~13.1.2",
-    "@angular/compiler-cli": "~13.1.1",
+    "@angular-devkit/build-angular": "~14.0.3",
+    "@angular/cli": "~14.0.3",
+    "@angular/compiler-cli": "~14.0.3",
     "@ngxs/devtools-plugin": "^3.7.3",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^14.14.37",
@@ -47,6 +47,6 @@
     "protractor": "~7.0.0",
     "tailwindcss": "^2.0.4",
     "tslint": "~6.1.0",
-    "typescript": "~4.5.4"
+    "typescript": "~4.7.4"
   }
 }
