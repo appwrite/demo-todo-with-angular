@@ -61,9 +61,7 @@ export class TodoState {
     action: Todos.Fetch
   ) {
     try {
-      let todos = await Api.provider().database.listDocuments(
-        Server.collectionID
-      );
+      let todos = await Api.database().listDocuments(Server.collectionID);
       setState({
         todos: todos.documents,
       });
@@ -86,7 +84,7 @@ export class TodoState {
   ) {
     try {
       let { data, read, write } = action.payload;
-      let todo = await Api.provider().database.createDocument(
+      let todo = await Api.database().createDocument(
         Server.collectionID,
         'unique()',
         data,
@@ -116,7 +114,7 @@ export class TodoState {
   ) {
     let { documentId, data, read, write } = action.payload;
     try {
-      let updatedTodo = await Api.provider().database.updateDocument(
+      let updatedTodo = await Api.database().updateDocument(
         Server.collectionID,
         documentId,
         data,
@@ -124,9 +122,7 @@ export class TodoState {
         write
       );
       let todoList = [...getState().todos];
-      const index = todoList.findIndex(
-        (todo) => todo.$id === updatedTodo.$id
-      );
+      const index = todoList.findIndex((todo) => todo.$id === updatedTodo.$id);
       if (index !== -1) {
         todoList[index] = updatedTodo;
         patchState({
@@ -152,10 +148,7 @@ export class TodoState {
   ) {
     let { documentId } = action.payload;
     try {
-      await Api.provider().database.deleteDocument(
-        Server.collectionID,
-        documentId
-      );
+      await Api.database().deleteDocument(Server.collectionID, documentId);
       let todos = getState().todos;
       todos = todos.filter((todo) => todo.$id !== documentId);
       patchState({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Todo } from 'src/app/models/Todo';
@@ -11,7 +11,6 @@ import { Account, AccountState, Todos, TodoState } from 'src/app/store';
   styleUrls: ['./todo.component.css'],
 })
 export class TodoComponent implements OnInit {
-  
   @Select(TodoState.getTodos) todos$: Observable<Todo[]>;
 
   addTodoForm: FormGroup;
@@ -21,8 +20,8 @@ export class TodoComponent implements OnInit {
       content: ['', [Validators.required]],
     });
   }
-  
-  ngOnInit() {    
+
+  ngOnInit() {
     this.store.dispatch(new Todos.Fetch());
   }
 
@@ -31,6 +30,8 @@ export class TodoComponent implements OnInit {
       content: this.addTodoForm.value.content,
       isComplete: false,
     } as Todo;
+
+    this.addTodoForm.reset({ content: '' });
     const userId = this.store.selectSnapshot(AccountState.userId);
     const read = [`user:${userId}`];
     const write = read;
